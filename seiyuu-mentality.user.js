@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         seiyuu mentality
 // @namespace    https://lem.sh/
-// @version      2024-05-29
+// @version      2024-05-29.2
 // @description  highlights voice actors on anilist if lem is mental about them
 // @author       Lemmmy
 // @match        https://anilist.co/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=anilist.co
-// @grant        GM_log
+// @grant        none
 // @updateURL    https://raw.githubusercontent.com/Lemmmy/seiyuu-mentality/master/seiyuu-mentality.user.js
 // @downloadURL  https://raw.githubusercontent.com/Lemmmy/seiyuu-mentality/master/seiyuu-mentality.user.js
 // ==/UserScript==
@@ -129,13 +129,10 @@ const query = `query ($username: String, $page: Int) {
 
     if (!staff || !lastUpdate) {
       // Immediately fetch and wait
-      GM_log("Fetching favourite staff for", username);
       return await loadFavouriteStaff(username);
     } else if (new Date() - new Date(lastUpdate) > updateThreshold) {
       // Update in the background, but return the cached data
-      GM_log("Updating favourite staff for", username);
       loadFavouriteStaff(username)
-        .then(() => GM_log("Updated favourite staff for", username))
         .catch(console.error);
     }
 
@@ -166,7 +163,6 @@ const query = `query ($username: String, $page: Int) {
       users[username].name ||= lsGetString(`${key}:name`);
     }
 
-    GM_log("Loaded staff data", users, staffMap, staffIdToUserMap);
   }
 
   function renderRoleCard($roleCard) {
@@ -194,10 +190,7 @@ const query = `query ($username: String, $page: Int) {
           break;
         }
       }
-      if (!user) {
-        GM_log(`Could not find a user for staff ID ${staffId}?!`);
-        return;
-      }
+      if (!user) return;
 
       // Apply the style to the name
       const { text, shadow } = users[user];
@@ -289,16 +282,13 @@ const query = `query ($username: String, $page: Int) {
 
   function onReady() {
     // Load the staff data in the background
-    GM_log("seiyuu-mentality: Loading staff data");
     loadStaffData()
       .then(initialRender)
       .catch(err => {
         console.error("seiyuu-mentality: Error loading staff data", err);
-        GM_log("seiyuu-mentality: Error loading staff data", err);
       });
   }
 
-  GM_log("seiyuu-mentality: Init");
   if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
     onReady();
   } else {
