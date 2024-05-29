@@ -7,6 +7,8 @@
 // @match        https://anilist.co/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=anilist.co
 // @grant        GM_log
+// @updateURL    https://raw.githubusercontent.com/Lemmmy/seiyuu-mentality/master/index.js
+// @downloadURL  https://raw.githubusercontent.com/Lemmmy/seiyuu-mentality/master/index.js
 // ==/UserScript==
 
 // users to track and the colours for them (RGB). preference is given to the first user in the list
